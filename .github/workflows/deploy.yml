@@ -15,8 +15,8 @@ jobs:
 
     - name: Stop old container
       run: |
-        docker stop nginx || true
-        docker rm nginx || true
+        docker stop nginx 2>$null
+        docker rm nginx 2>$null
 
     - name: Build Docker image
       run: docker build -t nginx-local .
