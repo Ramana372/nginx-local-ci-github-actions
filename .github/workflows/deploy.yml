@@ -1,0 +1,25 @@
+name: Local CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Stop old container
+      run: |
+        docker stop nginx || true
+        docker rm nginx || true
+
+    - name: Build Docker image
+      run: docker build -t nginx-local .
+
+    - name: Run container
+      run: docker run -d -p 80:80 --name nginx nginx-local
