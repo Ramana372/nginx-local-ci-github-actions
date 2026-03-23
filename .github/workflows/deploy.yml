@@ -15,8 +15,13 @@ jobs:
 
     - name: Stop old container
       run: |
-        docker stop nginx 2>$null
-        docker rm nginx 2>$null
+        $container = docker ps -a --format "{{.Names}}" | Select-String "^nginx$"
+        if ($container) {
+          docker stop nginx
+          docker rm nginx
+        } else {
+          Write-Output "No existing container found"
+        }
 
     - name: Build Docker image
       run: docker build -t nginx-local .
